@@ -25,7 +25,7 @@ class TestSlackTools(TestCase):
         print(set(self.slack_tools.get_user_names())
               - set(self.config_tools.get_user_slacknames())
               - {"slackbot",
-                 "garden7",
+                 "garden8",
                  "github"})
 
     '''

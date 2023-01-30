@@ -1,4 +1,4 @@
-# 정원사들 시즌7 출석부 문서
+# 정원사들 시즌8 출석부 문서
 
 
 ## Slack Github Bot 연동
@@ -18,16 +18,16 @@ users.yaml 에 slack 유저명에 github 유저명을 설정해 줍니다.
 [01.configuration](02.configuration.md)
 
 ## 02.Django 세팅
-[02.Django](https://github.com/junho85/garden7/wiki/02.Django)
+[02.Django](https://github.com/junho85/garden8/wiki/02.Django)
 
 ## 06.cron
-[06.cron](https://github.com/junho85/garden7/wiki/06.cron)
+[06.cron](https://github.com/junho85/garden8/wiki/06.cron)
 
 ## 09.배포
-[09.deployment](https://github.com/junho85/garden7/wiki/09.deployment)
+[09.deployment](https://github.com/junho85/garden8/wiki/09.deployment)
 
 ## 11.slack message
-[11.slack message](https://github.com/junho85/garden7/wiki/11.slack-message)
+[11.slack message](https://github.com/junho85/garden8/wiki/11.slack-message)
 
 ## 12.API
-[12.API](https://github.com/junho85/garden7/wiki/12.API)
+[12.API](https://github.com/junho85/garden8/wiki/12.API)
