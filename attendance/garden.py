@@ -88,7 +88,7 @@ class Garden:
             date_before_day1 = date - timedelta(days=1)
             hour = ts_datetime.hour
 
-            if date_before_day1 >= start_date and hour < 2 and date_before_day1 not in result:
+            if date_before_day1 >= start_date and hour < 3 and date_before_day1 not in result:
                 # check before day1. if exists, before day1 is already done.
                 result[date_before_day1] = []
                 result[date_before_day1].append(attend)
