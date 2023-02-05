@@ -3,7 +3,7 @@ import os
 import re
 from datetime import timedelta, datetime
 
-import slack
+import slack_sdk
 
 
 class SlackTools:
@@ -15,7 +15,7 @@ class SlackTools:
 
         slack_api_token = config['DEFAULT']['SLACK_API_TOKEN']
 
-        self.slack_client = slack.WebClient(token=slack_api_token)
+        self.slack_client = slack_sdk.WebClient(token=slack_api_token)
         self.channel_id = config['DEFAULT']['CHANNEL_ID']
 
     def get_slack_client(self):

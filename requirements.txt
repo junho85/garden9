@@ -1,4 +1,4 @@
-slackclient
+slack_sdk
 Django
 pymongo
 pyyaml
