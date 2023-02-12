@@ -9,11 +9,18 @@ from attendance.config_tools import ConfigTools
 class Garden:
     def __init__(self):
         self.config_tools = ConfigTools()
-        self.slack_tools = SlackTools()
-        self.mongo_tools = MongoTools()
+        self.slack_tools = SlackTools(
+            slack_api_token=self.config_tools.config['DEFAULT']['SLACK_API_TOKEN'],
+            commit_channel_id=self.config_tools.config['DEFAULT']['CHANNEL_ID'],
+        )
+        self.mongo_tools = MongoTools(
+            host=self.config_tools.config['MONGO']['HOST'],
+            port=self.config_tools.config['MONGO']['PORT'],
+            database=self.config_tools.config['MONGO']['DATABASE']
+        )
 
         self.slack_client = self.slack_tools.get_slack_client()
-        self.channel_id = self.slack_tools.get_channel_id()
+        self.slack_commit_channel_id = self.slack_tools.get_commit_channel_id()
 
         self.gardening_days = self.config_tools.get_gardening_days()
         self.start_date = self.config_tools.get_start_date()
@@ -101,13 +108,18 @@ class Garden:
 
         return result
 
-    # github 봇으로 모은 slack message 들을 slack_messages collection 에 저장
     def collect_slack_messages(self, oldest, latest):
+        """
+        github 봇으로 모은 slack message 들을 slack_messages collection 에 저장
+        :param oldest:
+        :param latest:
+        :return:
+        """
         response = self.slack_client.conversations_history(
-            channel=self.channel_id,
+            channel=self.slack_commit_channel_id,
             latest=str(latest),
             oldest=str(oldest),
-            count=1000
+            limit=1000 # default 100
         )
 
         mongo_collection = self.mongo_tools.get_collection()

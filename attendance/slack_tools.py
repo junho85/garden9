@@ -1,5 +1,3 @@
-import configparser
-import os
 import re
 from datetime import timedelta, datetime
 
@@ -7,33 +5,19 @@ import slack_sdk
 
 
 class SlackTools:
-    def __init__(self):
-        config = configparser.ConfigParser()
-        BASE_DIR = os.path.dirname(os.path.abspath(__file__))
-        path = os.path.join(BASE_DIR, 'config.ini')
-        config.read(path)
-
-        slack_api_token = config['DEFAULT']['SLACK_API_TOKEN']
-
+    def __init__(self, slack_api_token, commit_channel_id):
+        """
+        :param slack_api_token: slack api token
+        :param commit_channel_id: commit 메시지를 수집할 채널 ID
+        """
         self.slack_client = slack_sdk.WebClient(token=slack_api_token)
-        self.channel_id = config['DEFAULT']['CHANNEL_ID']
+        self.commit_channel_id = commit_channel_id
 
     def get_slack_client(self):
         return self.slack_client
 
-    def get_channel_id(self):
-        return self.channel_id
-
-    def send_no_show_message(self, members):
-        message = "[미출석자 알림]\n"
-        for member in members:
-            message += "@%s " % member
-
-        self.slack_client.chat_postMessage(
-            channel='#gardening-for-100days',
-            text=message,
-            link_names=1
-        )
+    def get_commit_channel_id(self):
+        return self.commit_channel_id
 
     def get_users(self):
         return self.slack_client.users_list()
@@ -96,7 +80,7 @@ class SlackTools:
         latest = tomorrow.timestamp()
 
         response = self.slack_client.conversations_history(
-            channel=self.channel_id,
+            channel=self.commit_channel_id,
             latest=str(latest),
             oldest=str(oldest),
             count=1000
@@ -104,12 +88,12 @@ class SlackTools:
 
         return response
 
-    '''
-    자기소개채널에서 소개글을 보고 github name리스트 추출
-    @:param introduce_channel_id
-    @:return github name list
-    '''
     def get_github_name_slack_id_dictionary_from_introduce_channel(self, introduce_channel_id):
+        """
+        자기소개채널에서 소개글을 보고 github name리스트 추출
+        :param introduce_channel_id:
+        :return: github name list
+        """
         p = re.compile('github.com/(\w+)')
 
         github_name_slack_id_dict = {}

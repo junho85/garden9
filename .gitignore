@@ -1,5 +1,5 @@
-attendance/config.ini
 db.sqlite3
+config.ini
 users.yaml
 venv
 .idea

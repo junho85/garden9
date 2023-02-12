@@ -6,13 +6,21 @@ import yaml
 
 class ConfigTools:
     def __init__(self):
+        self.config_dir = self.get_config_dir()
         self.config = self.load_config()
         self.users = self.load_users()
 
+    def get_config_dir(self):
+        env_config_dir = os.environ.get('GARDEN_CONFIG_DIR')
+        if env_config_dir:
+            return env_config_dir
+
+        config_dir = "/config/attendance"
+        return config_dir
+
     def load_config(self):
         config = configparser.ConfigParser()
-        base_dir = os.path.dirname(os.path.abspath(__file__))
-        path = os.path.join(base_dir, 'config.ini')
+        path = os.path.join(self.config_dir, 'config.ini')
         config.read(path)
         return config
 
@@ -29,14 +37,12 @@ class ConfigTools:
         return datetime.strptime(self.get_start_date_str(),
                           "%Y-%m-%d").date()  # start_date e.g.) 2021-01-18
 
-    '''
-    load users.yaml
-    '''
     def load_users(self):
-        base_dir = os.path.dirname(os.path.abspath(__file__))
-
-        # users_with_slackname
-        path = os.path.join(base_dir, 'users.yaml')
+        """
+        load users.yaml
+        :return: users_with_slackname
+        """
+        path = os.path.join(self.config_dir, 'users.yaml')
         with open(path) as file:
             users_with_slackname = yaml.full_load(file)
 

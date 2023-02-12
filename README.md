@@ -28,6 +28,16 @@ python manage.py runserver
 
 자세한 내용은 [docs](docs)의 내용을 참고합니다.
 
+## 설정
+기본 설정 경로는 `/config/attendance` 를 사용합니다.
+
+환경변수 GARDEN_CONFIG_DIR 를 설정해 주면 해당 경로로 변경됩니다.
+
+e.g.
+```
+GARDEN_CONFIG_DIR=./config/attendance python ./manage.py runserver 0.0.0.0:8000
+```
+
 ## 참고
 * [garden7 github](https://github.com/junho85/garden7)
 * [garden6 github](https://github.com/junho85/garden6)
