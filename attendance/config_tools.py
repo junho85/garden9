@@ -6,11 +6,11 @@ import yaml
 
 class ConfigTools:
     def __init__(self):
-        self.config_dir = self.get_config_dir()
+        self.config_dir = self.init_config_dir()
         self.config = self.load_config()
         self.users = self.load_users()
 
-    def get_config_dir(self):
+    def init_config_dir(self):
         env_config_dir = os.environ.get('GARDEN_CONFIG_DIR')
         if env_config_dir:
             return env_config_dir
