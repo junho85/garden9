@@ -28,6 +28,11 @@ python manage.py runserver
 
 자세한 내용은 [docs](docs)의 내용을 참고합니다.
 
+## docker image build and push
+```
+source docker-build-push.sh 20230213_2
+```
+
 ## 설정
 기본 설정 경로는 `/config/attendance` 를 사용합니다.
 
