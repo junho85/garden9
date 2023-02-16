@@ -4,10 +4,10 @@ from datetime import date, datetime, timedelta
 garden = Garden()
 
 today = datetime.today()
-# start_date = today - timedelta(days=11)
-# end_date = today + timedelta(days=1)
-start_date = datetime.strptime('2023-02-05', "%Y-%m-%d")
-end_date = datetime.strptime('2023-02-07', "%Y-%m-%d")
+start_date = today - timedelta(days=1)
+end_date = today + timedelta(days=1)
+# start_date = datetime.strptime('2023-02-05', "%Y-%m-%d")
+# end_date = datetime.strptime('2023-02-07', "%Y-%m-%d")
 
 oldest = start_date.timestamp()
 latest = end_date.timestamp()

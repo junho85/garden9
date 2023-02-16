@@ -57,13 +57,28 @@ def user_api(request, user):
 
 # slack_messages 수집
 def collect(request):
-    oldest = datetime.strptime(request.GET.get('start'), "%Y-%m-%d").timestamp()
-    latest = datetime.strptime(request.GET.get('end'), "%Y-%m-%d").timestamp()
+    # yyyy-mm-dd
+    start_str = request.GET.get('start')
+    end_str = request.GET.get('end')
+
+    if start_str is None:
+        today = datetime.today()
+        start_str = (today - timedelta(days=1)).strftime("%Y-%m-%d")  # yesterday
+
+    if end_str is None:
+        today = datetime.today()
+        end_str = (today + timedelta(days=1)).strftime("%Y-%m-%d")  # tomorrow
+
+    start = datetime.strptime(start_str, "%Y-%m-%d")
+    end = datetime.strptime(end_str, "%Y-%m-%d")
+
+    oldest = start.timestamp()
+    latest = end.timestamp()
 
     garden = Garden()
-    garden.collect_slack_messages(oldest, latest)
+    result = garden.collect_slack_messages(oldest, latest)
 
-    return JsonResponse({})
+    return JsonResponse(result, safe=False)
 
 
 # 특정일의 출석 데이터 불러오기

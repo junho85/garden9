@@ -124,7 +124,8 @@ class Garden:
 
         mongo_collection = self.mongo_tools.get_collection()
 
-        for message in response["messages"]:
+        messages = response["messages"]
+        for message in messages:
             if "attachments" not in message:
                 continue
 
@@ -143,6 +144,12 @@ class Garden:
             except pymongo.errors.DuplicateKeyError as err:
                 print(err)
                 continue
+
+        return {
+            "start": datetime.fromtimestamp(oldest),
+            "end": datetime.fromtimestamp(latest),
+            "count": len(messages),
+        }
 
     """
     db 에 수집한 slack 메시지 삭제
