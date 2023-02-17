@@ -11,11 +11,20 @@ class ConfigTools:
         self.users = self.load_users()
 
     def init_config_dir(self):
+        """
+        GARDEN_CONFIG_DIR 환경변수 값이 있으면 GARDEN_CONFIG_DIR 를 사용하고
+        없으면 ./config/attendance 를 기본값으로 사용합니다.
+
+        로컬 개발 환경에서는 ./config/attendance 에 파일을 만들어서 사용하고
+        배포 환경에서는 GARDEN_CONFIG_DIR 설정을 상황에 맞춰 사용하면 되겠음
+
+        :return:
+        """
         env_config_dir = os.environ.get('GARDEN_CONFIG_DIR')
         if env_config_dir:
             return env_config_dir
 
-        config_dir = "/config/attendance"
+        config_dir = "./config/attendance"
         return config_dir
 
     def load_config(self):
