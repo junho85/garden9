@@ -1,4 +1,5 @@
 from datetime import date, timedelta, datetime
+
 import pymongo
 import pprint
 from attendance.slack_tools import SlackTools
@@ -10,8 +11,8 @@ class Garden:
     def __init__(self):
         self.config_tools = ConfigTools()
         self.slack_tools = SlackTools(
-            slack_api_token=self.config_tools.config['DEFAULT']['SLACK_API_TOKEN'],
-            commit_channel_id=self.config_tools.config['DEFAULT']['CHANNEL_ID'],
+            slack_api_token=self.config_tools.get_slack_api_token(),
+            commit_channel_id=self.config_tools.get_commit_channel_id(),
         )
         self.mongo_tools = MongoTools(
             host=self.config_tools.config['MONGO']['HOST'],

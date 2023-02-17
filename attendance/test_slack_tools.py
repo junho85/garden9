@@ -7,8 +7,11 @@ import re
 
 
 class TestSlackTools(TestCase):
-    slack_tools = SlackTools()
     config_tools = ConfigTools()
+    slack_tools = SlackTools(
+        slack_api_token=config_tools.get_slack_api_token(),
+        commit_channel_id=config_tools.get_commit_channel_id(),
+    )
 
     introduce_channel_id = "C04LA11FZ34"
 
@@ -102,8 +105,8 @@ class TestSlackTools(TestCase):
 
     def test_get_commit_messages(self):
         response = self.slack_tools.get_slack_client().conversations_history(
-            channel="C02N0D83A3A",
-            count=2
+            channel=self.config_tools.get_commit_channel_id(),
+            count=10
         )
 
         for message in response["messages"]:

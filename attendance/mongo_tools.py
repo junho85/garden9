@@ -1,7 +1,8 @@
 import configparser
 import os
 import pymongo
-
+import pytz
+from bson.codec_options import CodecOptions
 
 class MongoTools:
     def __init__(self, host, port, database):
@@ -23,4 +24,9 @@ class MongoTools:
     def get_collection(self):
         db = self.get_database()
 
-        return db.get_collection(self.mongo_collection_slack_message)
+        return db.get_collection(self.mongo_collection_slack_message).with_options(
+            codec_options=CodecOptions(
+                tz_aware=True,
+                tzinfo=pytz.timezone('Asia/Seoul')
+            )
+        )

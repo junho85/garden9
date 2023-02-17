@@ -54,5 +54,12 @@ class ConfigTools:
     def get_user_slacknames(self):
         return [self.users[user]["slack"] for user in self.users]
 
+    def get_slack_api_token(self):
+        return self.config['DEFAULT']['SLACK_API_TOKEN']
+
+    def get_commit_channel_id(self):
+        return self.config['DEFAULT']['CHANNEL_ID']
+
     def get_monitor_channel_id(self):
         return self.config['MONITOR']['CHANNEL_ID']
+
