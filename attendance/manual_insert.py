@@ -15,7 +15,9 @@ config_tools = ConfigTools()
 mongo_tools = MongoTools(
     host=config_tools.config['MONGO']['HOST'],
     port=config_tools.config['MONGO']['PORT'],
-    database=config_tools.config['MONGO']['DATABASE']
+    database=config_tools.config['MONGO']['DATABASE'],
+    username=config_tools.config['MONGO']['USERNAME'],
+    password=config_tools.config['MONGO']['PASSWORD']
 )
 
 garden = Garden()

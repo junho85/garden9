@@ -4,17 +4,25 @@ import pymongo
 import pytz
 from bson.codec_options import CodecOptions
 
+
 class MongoTools:
-    def __init__(self, host, port, database):
+    def __init__(self, host, port, database, username, password):
         self.mongo_host = host
         self.mongo_port = port
         self.mongo_database = database
+        self.username = username
+        self.password = password
 
         # mongodb collections
         self.mongo_collection_slack_message = "slack_messages"
 
     def connect_mongo(self):
-        return pymongo.MongoClient("mongodb://%s:%s" % (self.mongo_host, self.mongo_port))
+        return pymongo.MongoClient(
+            "mongodb://%s:%s@%s:%s" % (self.username,
+                                       self.password,
+                                       self.mongo_host,
+                                       self.mongo_port)
+        )
 
     def get_database(self):
         conn = self.connect_mongo()

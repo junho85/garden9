@@ -17,7 +17,9 @@ class Garden:
         self.mongo_tools = MongoTools(
             host=self.config_tools.config['MONGO']['HOST'],
             port=self.config_tools.config['MONGO']['PORT'],
-            database=self.config_tools.config['MONGO']['DATABASE']
+            database=self.config_tools.config['MONGO']['DATABASE'],
+            username=self.config_tools.config['MONGO']['USERNAME'],
+            password=self.config_tools.config['MONGO']['PASSWORD']
         )
 
         self.slack_client = self.slack_tools.get_slack_client()
