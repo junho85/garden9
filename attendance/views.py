@@ -6,6 +6,8 @@ import pprint
 import markdown
 from python_markdown_slack import PythonMarkdownSlack
 
+from .service.AttendanceService import AttendanceService
+
 
 def index(request):
     garden = Garden()
@@ -24,7 +26,7 @@ def users(request):
 
 
 def daterange(start_date, end_date):
-    for n in range(int ((end_date - start_date).days)):
+    for n in range(int((end_date - start_date).days)):
         yield start_date + timedelta(n)
 
 
@@ -42,11 +44,11 @@ def user(request, user):
 
 # 유저의 출석데이터
 def user_api(request, user):
-    garden = Garden()
-    result = garden.find_attendance_by_user(user)
+    attendance_service = AttendanceService()
+    attendances = attendance_service.find_attendances_by_user(user)
 
     output = []
-    for (date, commits) in result.items():
+    for (date, commits) in attendances.items():
         for commit in commits:
             commit["message"][0] = markdown.markdown(commit["message"][0], extensions=[PythonMarkdownSlack()])
             # commit["message"][0] = "<br>".join(commit["message"][0].split("\n"))
@@ -55,8 +57,12 @@ def user_api(request, user):
     return JsonResponse(output, safe=False)
 
 
-# slack_messages 수집
 def collect(request):
+    """
+    slack_messages 수집
+    :param request:
+    :return:
+    """
     # yyyy-mm-dd
     start_str = request.GET.get('start')
     end_str = request.GET.get('end')
@@ -81,10 +87,17 @@ def collect(request):
     return JsonResponse(result, safe=False)
 
 
-# 특정일의 출석 데이터 불러오기
-def get(request, date):
+def get(request, date_str):
+    """
+    특정일의 출석 데이터 불러오기
+    :param request:
+    :param date_str: str, yyyymmdd
+    :return:
+    """
     garden = Garden()
-    result = garden.get_attendance(datetime.strptime(date, "%Y%m%d").date())
+    attendance_service = AttendanceService()
+    result = attendance_service.get_attendances(users=garden.get_users(),
+                                                date=datetime.strptime(date_str, "%Y%m%d").date())
     return JsonResponse(result, safe=False)
 
 
@@ -93,15 +106,20 @@ def daterange(start_date, end_date):
         yield start_date + timedelta(n)
 
 
-# 전체 출석부 조회
 def gets(request):
+    """
+    전체 출석부 조회
+    :param request:
+    :return:
+    """
     garden = Garden()
+    attendance_service = AttendanceService()
 
     result = []
 
     users = garden.get_users()
     for user in users:
-        attendances = garden.find_attendance_by_user(user)
+        attendances = attendance_service.find_attendances_by_user(user)
 
         # convert key type datetime.date to string
         for key_date in list(attendances.keys()).copy():
