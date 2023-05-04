@@ -1,3 +1,4 @@
+import logging
 from django.shortcuts import render
 from django.http import JsonResponse
 from datetime import datetime, timedelta
@@ -50,10 +51,11 @@ def user_api(request, user):
     output = []
     for (date, commits) in attendances.items():
         for commit in commits:
-            commit["message"][0] = markdown.markdown(commit["message"][0], extensions=[PythonMarkdownSlack()])
-            # commit["message"][0] = "<br>".join(commit["message"][0].split("\n"))
+            commit["message"] = markdown.markdown(commit["message"], extensions=[PythonMarkdownSlack()])
+            # commit["message"] = "<br>".join(commit["message"].split("\n"))
         output.append({"date": date, "commits": commits})
 
+    # logging.info(output)
     return JsonResponse(output, safe=False)
 
 

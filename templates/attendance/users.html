@@ -102,8 +102,8 @@ function draw_commits(attendances) {
     $.each(attendances, function(idx, attendance) {
         html += `<h4>${attendance.date}</h4>`;
         $.each(attendance.commits, function(idx, commit) {
-            commit.message[0] = commit.message[0].replace(/(?:\r\n|\r|\n)/g, '<br>');
-            html += `${commit.ts}<br>${commit.message[0]}`;
+            commit.message = commit.message.replace(/(?:\r\n|\r|\n)/g, '<br>');
+            html += `${commit.ts}<br>${commit.message}`;
         })
     });
     $("#commits").html(html);

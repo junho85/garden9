@@ -1,3 +1,5 @@
+import logging
+
 from attendance.config_tools import ConfigTools
 from attendance.mongo_tools import MongoTools
 from attendance.repository.AttendanceRepository import AttendanceRepository
@@ -6,6 +8,12 @@ from datetime import date, timedelta, datetime
 
 class AttendanceService:
     def __init__(self):
+        # logger 세팅
+        # level = logging.DEBUG
+        level = logging.INFO
+        logging.basicConfig(level=level,
+                            format='%(asctime)s [%(process)d] {%(filename)s:%(lineno)d} %(levelname)s - %(message)s')
+
         self.attendance_repository = AttendanceRepository()
 
         self.config_tools = ConfigTools()
@@ -23,6 +31,44 @@ class AttendanceService:
             password=self.config_tools.config['MONGO']['PASSWORD']
         )
 
+    def get_commits_with_ts_by_user(self, user):
+        results = []
+        for message in self.attendance_repository.get_messages_by_author_name(author_name=user):
+            for attachment in message["attachments"]:
+                try:
+                    """
+                    커밋 내역만 추출합니다
+
+                    * 커밋 내역은 text 필드를 가집니다.
+                    * 단, Pull request opened도 text 필드를 가지고 있습니다.
+                      * 이 경우 pretext 필드가 있고 "Pull request opened by"로 시작하기 때문에 해당 내역을 제외합니다.
+                    """
+                    # commit has text field
+                    # there is no text field in pull request, etc...
+
+                    # filter Pull request opened by
+                    if "pretext" in attachment and attachment["pretext"].startswith("Pull request opened by"):
+                        continue
+
+                    for commit_text in attachment["text"].split("\n"):
+                        results.append({
+                            "ts": message["ts"],
+                            "ts_for_db": message["ts_for_db"],
+                            "commit_text": commit_text
+                        })
+                    # logging.info(f'text={attachment["text"]}')
+                    # logging.info(markdown.markdown(attachment["text"], extensions=[PythonMarkdownSlack()]))
+
+                    # if "Guide to Spring Bean Scopes" in attachment["text"]:
+                    #     logging.info("****************")
+                    #     logging.info(message)
+                except Exception as err:
+                    # logging.info(attachment)
+                    # logging.info(message["attachments"])
+                    # logging.info(err)
+                    continue
+        return results
+
     def find_attendances_by_user(self, user):
         """
         # 특정 유저의 전체 출석부를 생성함
@@ -30,35 +76,16 @@ class AttendanceService:
         :param user:
         :return:
         """
-        mongo_collection = self.mongo_tools.get_collection()
-
         result = {}
 
         start_date = self.start_date
-        for message in mongo_collection.find({"author_name": user}).sort("ts", 1):
+
+        for commit in self.get_commits_with_ts_by_user(user=user):
             # make attend
-            commits = []
-            for attachment in message["attachments"]:
-                try:
-                    # commit has text field
-                    # there is no text field in pull request, etc...
-                    commits.append(attachment["text"])
-                except Exception as err:
-                    print(message["attachments"])
-                    print(err)
-                    continue
-
-            # skip - if there is no commits
-            if len(commits) == 0:
-                continue
-
-            # ts_datetime = datetime.fromtimestamp(float(message["ts"]))
-            ts_datetime = message["ts_for_db"]
-            ts = message["ts"]
+            ts_datetime = commit["ts_for_db"]
             attend = {
                 "ts": ts_datetime,
-                "tsts": ts,
-                "message": commits
+                "message": commit["commit_text"]
             }
 
             # current date and date before day1
