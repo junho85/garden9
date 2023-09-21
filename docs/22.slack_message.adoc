@@ -26,7 +26,7 @@ messages 리스트로 오는데 그 중 하나 추출 예제
 	},
 	'attachments': [{
 		'fallback': '[junho85/TIL] 1 new commit pushed  to _master_ by junho85',
-		'text': '`<https://github.com/junho85/TIL/commit/a706a7a012ae4cd568fb0b225c826bb0fc1ef725|a706a7a0>` - 정원사들 시즌8 설치 문서 정리 중\n',
+		'text': '`<https://github.com/junho85/TIL/commit/a706a7a012ae4cd568fb0b225c826bb0fc1ef725|a706a7a0>` - 정원사들 시즌9 설치 문서 정리 중\n',
 		'pretext': '<https://github.com/junho85/TIL/compare/5ae9faa91fc4...a706a7a012ae|1 new commit> pushed  to `<https://github.com/junho85/TIL/tree/master|master>` by <https://github.com/junho85|junho85>',
 		'footer': '<https://github.com/junho85/TIL|junho85/TIL>',
 		'id': 1,

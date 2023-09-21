@@ -1,9 +1,9 @@
-# garden8
-* 정원사들 시즌8 출석부입니다.
+# garden9
+* 정원사들 시즌9 출석부입니다.
 * slack #commit 채널에 올라온 메시지들을 수집해서 출석부를 작성합니다.
-* [시즌8 출석부 바로가기 gogo](http://garden8.junho85.pe.kr/)
-* [github](https://github.com/junho85/garden8)
-* [wiki](https://github.com/junho85/garden8/wiki)
+* [시즌9 출석부 바로가기 gogo](http://garden9.junho85.pe.kr/)
+* [github](https://github.com/junho85/garden9)
+* [wiki](https://github.com/junho85/garden9/wiki)
 
 ## project
 start mongodb

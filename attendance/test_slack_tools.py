@@ -33,7 +33,7 @@ class TestSlackTools(TestCase):
         users = set(self.slack_tools.get_user_names()) \
                 - set(self.config_tools.get_user_slacknames()) \
                 - {"slackbot",
-                   "garden8",
+                   "garden9",
                    "github"}
 
         for user in users:
