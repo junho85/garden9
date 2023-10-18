@@ -13,7 +13,7 @@ class TestSlackTools(TestCase):
         commit_channel_id=config_tools.get_commit_channel_id(),
     )
 
-    introduce_channel_id = "C04LA11FZ34"
+    introduce_channel_id = "C05MF7K6YMB" # 자기소개 채널
 
     def test_get_users(self):
         print(self.slack_tools.get_users())
@@ -21,7 +21,11 @@ class TestSlackTools(TestCase):
     def test_get_user_names(self):
         print(self.slack_tools.get_user_names())
 
-    def test_get_user_slacknames(self):
+    '''
+    users.yaml 파일 내용에서 slacknames 추출
+    e.g. ['junho85', ...]
+    '''
+    def test_get_user_slacknames_from_users(self):
         print(self.config_tools.get_user_slacknames())
 
     '''
@@ -61,11 +65,11 @@ class TestSlackTools(TestCase):
         for (id, name) in slack_id_name_dict.items():
             print(id, name)  # e.g. U04L6T16F0D junho85
 
-    '''
-    자기소개 방에 있는 유저들의 github 주소를 기준으로 slack name 구하기
-    '''
-
-    def test_get_users(self):
+    def test_get_users_from_introduce_channel(self):
+        """
+        자기소개 방에 있는 유저들의 github 주소를 기준으로 slack name 구하기
+        자기소개채널에서 소개글을 보고 github name리스트 추출하고 slack name 구해서 users.yaml 포멧으로 출력
+        """
         github_name_slack_id_dict = self.slack_tools.get_github_name_slack_id_dictionary_from_introduce_channel(
             self.introduce_channel_id)
         slack_id_name_dict = self.slack_tools.get_users_id_name_dictionary()
