@@ -44,9 +44,14 @@ class TestAttendanceService(TestCase):
                 logging.info(commit)
 
     def test_get_commits_with_ts_by_user(self):
+        """
+        [{ts, ts_for_db, commit_text}] 형태의 리스트를 반환함
+        :return:
+        """
         # user = 'zieunx'
         user = 'junho85'
         commits = self.attendance_service.get_commits_with_ts_by_user(user=user)
         for commit in commits:
             # logging.info("=====")
             logging.info(commit)
+            # 2023-10-18 23:47:01,081 [25291] {test_AttendanceService.py:52} INFO - {'ts': '1691935120.120479', 'ts_for_db': datetime.datetime(2023, 8, 13, 22, 58, 40, 120000, tzinfo=<DstTzInfo 'Asia/Seoul' KST+9:00:00 STD>), 'commit_text': '`<https://github.com/junho85/TIL/commit/c00d2e4c23915bad48e8e800881bdaf590fe5d20|c00d2e4c>` - 개발자가 알아야 할 데이터 지향 프로그래밍 with JDK20 읽어보기 - 객체 지향 프로그래밍'}

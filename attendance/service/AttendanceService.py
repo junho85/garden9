@@ -32,22 +32,39 @@ class AttendanceService:
         )
 
     def get_commits_with_ts_by_user(self, user):
+        """
+        DB에서 특정 유저의 커밋 메시지를 가져옴. DB에 저장된 데이터는 slack 메시지 형태이고 attachments.text 필드에 커밋 메시지가 있음. 모든 메시지가 커밋 메시지는 아니기 때문에 커밋메시지 외에는 필터링 함
+
+        :param user: user e.g. junho85
+        :return: [{ts, ts_for_db, commit_text}] 형태의 리스트 반환
+        e.g.
+        [{
+          'ts': '1691935120.120479',
+          'ts_for_db': datetime.datetime(2023, 8, 13, 22, 58, 40, 120000, tzinfo=<DstTzInfo 'Asia/Seoul' KST+9:00:00 STD>),
+          'commit_text': '`<https://github.com/junho85/TIL/commit/c00d2e4c23915bad48e8e800881bdaf590fe5d20|c00d2e4c>` - 개발자가 알아야 할 데이터 지향 프로그래밍 with JDK20 읽어보기 - 객체 지향 프로그래밍'
+        }]
+
+        commit_text 는 slack 메시지의 attachments.text
+
+        Example usage:
+            user = 'junho85'
+            commits = get_commits_with_ts_by_user(user=user)
+        """
         results = []
         for message in self.attendance_repository.get_messages_by_author_name(author_name=user):
             for attachment in message["attachments"]:
                 try:
                     """
-                    커밋 내역만 추출합니다
-
-                    * 커밋 내역은 text 필드를 가집니다.
-                    * 단, Pull request opened도 text 필드를 가지고 있습니다.
-                      * 이 경우 pretext 필드가 있고 "Pull request opened by"로 시작하기 때문에 해당 내역을 제외합니다.
+                    커밋 내역만 추출
+                    * 커밋 메시지 특징
+                      * text 필드를 가짐
+                      * 커밋이 여러개인 경우 개행으로 구분됨. 개행으로 split해서 커밋 메시지를 추출함
+                    * 커밋 메시지가 아닌 경우
+                      * Pull request opened
+                        * text 필드를 가지고 있으므로 주의
+                        * 이 경우 pretext 필드가 있고 "Pull request opened by"로 시작하기 때문에 해당 내역을 제외
                     """
-                    # commit has text field
-                    # there is no text field in pull request, etc...
-
-                    # filter Pull request opened by
-                    if "pretext" in attachment and attachment["pretext"].startswith("Pull request opened by"):
+                    if self.is_not_commit_message(attachment):
                         continue
 
                     for commit_text in attachment["text"].split("\n"):
@@ -56,18 +73,21 @@ class AttendanceService:
                             "ts_for_db": message["ts_for_db"],
                             "commit_text": commit_text
                         })
-                    # logging.info(f'text={attachment["text"]}')
-                    # logging.info(markdown.markdown(attachment["text"], extensions=[PythonMarkdownSlack()]))
-
-                    # if "Guide to Spring Bean Scopes" in attachment["text"]:
-                    #     logging.info("****************")
-                    #     logging.info(message)
                 except Exception as err:
                     # logging.info(attachment)
                     # logging.info(message["attachments"])
                     # logging.info(err)
                     continue
         return results
+
+    def is_not_commit_message(self, attachment):
+        """
+        커밋 메시지가 아닌 경우 True를 반환합니다.
+        * pretext 필드가 있고 pretext 필드가 "Pull request opened by"로 시작하는 경우 PR 메시지
+        :param attachment:
+        :return:
+        """
+        return "pretext" in attachment and attachment["pretext"].startswith("Pull request opened by")
 
     def find_attendances_by_user(self, user):
         """
