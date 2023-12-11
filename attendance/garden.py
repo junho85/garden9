@@ -1,7 +1,10 @@
 from datetime import date, timedelta, datetime
+from urllib.parse import urlparse
 
 import pymongo
 import pprint
+
+import requests
 
 from attendance.service.SlackService import SlackService
 from attendance.slack_tools import SlackTools
@@ -104,4 +107,72 @@ class Garden:
             "start": datetime.fromtimestamp(oldest),
             "end": datetime.fromtimestamp(latest),
             "count": len(messages),
+        }
+
+    def manual_insert(self, commit_url):
+        mongo_collection = self.mongo_tools.get_collection()
+
+        commit = self.get_commit(commit_url)
+        # print("commit:")
+        # print(commit)
+        # print("user:" + commit["user"])
+        # print("sha:" + commit["sha"])
+        # print("sha_short:" + commit["sha_short"])
+        # print("ts:" + commit["ts"])
+        # print("ts_datetime:" + str(commit["ts_datetime"]))
+        # print("ts_datetime %Y-%m-%d:" + commit["ts_datetime"].strftime("%Y-%m-%d"))
+        # print("message:" + commit["message"])
+
+        today = datetime.today().strftime("%Y-%m-%d")
+        fallback = '*manual insert %s by june.kim* - commit by %s' % (today, commit["user"])
+        text = '`<%s|%s>` - %s' % (commit_url, commit["sha_short"], commit["message"])
+
+        user = 'U05MWPMTQE5'  # github (아무거나 넣어도 상관 없음)
+        message = {'attachments':
+            [{
+                'fallback': fallback,
+                'text': text
+            }],
+            'author_name': commit["user"],
+            'ts': commit["ts"],
+            'ts_for_db': commit["ts_datetime"],
+            'type': 'message',
+            'user': user
+        }
+
+        pprint.pprint(message)
+        # exit(-1)
+
+        try:
+            result = mongo_collection.insert_one(message)
+            pprint.pprint(result)
+            print(message)
+            return {"result": "success"}
+        except Exception as e:
+            print(e)
+            return {"result": "fail"}
+
+    def get_commit(self, commit_url):
+        parse_result = urlparse(commit_url)
+        # print(parse_result)
+        (_, user, repo, commit, sha) = parse_result.path.split("/")
+
+        api_url = 'https://api.github.com/repos/%s/%s/commits/%s' % (user, repo, sha)
+
+        r = requests.get(api_url)
+
+        # pprint(r)
+        # print(r.json())
+        commit_json = r.json()
+
+        ts_datetime = datetime.strptime(commit_json["commit"]["author"]["date"], "%Y-%m-%dT%H:%M:%S%z")
+        commit_message = commit_json["commit"]["message"]
+        ts = str(ts_datetime.timestamp())
+        return {
+            "user": user,
+            "ts": ts,
+            "ts_datetime": ts_datetime,
+            "sha": sha,
+            "sha_short": sha[:8],
+            "message": commit_message,
         }

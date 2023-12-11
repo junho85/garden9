@@ -90,7 +90,7 @@ class TestSlackTools(TestCase):
   slack: {slack["slack_name"]}''')
 
     def test_user(self):
-        user_id = "U04L6T16F0D"
+        user_id = "U05MWPMTQE5"
         r = self.slack_tools.get_user(user_id)
         print(r)
 

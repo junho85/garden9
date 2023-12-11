@@ -89,6 +89,19 @@ def collect(request):
     return JsonResponse(result, safe=False)
 
 
+def manual_insert(request):
+    """
+    수동 출석부 입력
+    :param request:
+    :return:
+    """
+    commit_url = request.GET.get('commit_url')
+    garden = Garden()
+    result = garden.manual_insert(commit_url)
+
+    return JsonResponse(result, safe=False)
+
+
 def get(request, date_str):
     """
     특정일의 출석 데이터 불러오기

@@ -7,6 +7,7 @@ urlpatterns = [
     path('api/users/', views.users, name='users'),  # 정원사들 리스트
     path('api/gets', views.gets, name='get'),  # 전체 출석부 조회. 리스트. 유저별.
     path('collect/', views.collect, name='collect'),  # slack_messages 수집
+    path('manual_insert/', views.manual_insert, name='manual_insert'),  # 수동 출석부 입력
     path('get/<date>', views.get, name='get'),  # 특정일의 출석부 조회. 날짜기준
 
     path('users/<user>/', views.user, name='user'),  # 유저별 출석부 데이터 페이지

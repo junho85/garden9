@@ -53,21 +53,21 @@ def get_commit(commit_url):
 
 def manual_insert(commit_url):
     commit = get_commit(commit_url)
-    print("commit:")
-    print(commit)
-    print("user:" + commit["user"])
-    print("sha:" + commit["sha"])
-    print("sha_short:" + commit["sha_short"])
-    print("ts:" + commit["ts"])
-    print("ts_datetime:" + str(commit["ts_datetime"]))
-    print("ts_datetime %Y-%m-%d:" + commit["ts_datetime"].strftime("%Y-%m-%d"))
-    print("message:" + commit["message"])
+    # print("commit:")
+    # print(commit)
+    # print("user:" + commit["user"])
+    # print("sha:" + commit["sha"])
+    # print("sha_short:" + commit["sha_short"])
+    # print("ts:" + commit["ts"])
+    # print("ts_datetime:" + str(commit["ts_datetime"]))
+    # print("ts_datetime %Y-%m-%d:" + commit["ts_datetime"].strftime("%Y-%m-%d"))
+    # print("message:" + commit["message"])
 
     today = datetime.today().strftime("%Y-%m-%d")
     fallback = '*manual insert %s by june.kim* - commit by %s' % (today, commit["user"])
     text = '`<%s|%s>` - %s' % (commit_url, commit["sha_short"], commit["message"])
 
-    user = 'U02LXDBJZRV'
+    user = 'U05MWPMTQE5'  # github
     message = {'attachments':
         [{
             'fallback': fallback,
