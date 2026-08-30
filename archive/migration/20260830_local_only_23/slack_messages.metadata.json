@@ -1,0 +1,1 @@
+{"indexes":[{"v":{"$numberInt":"2"},"key":{"_id":{"$numberInt":"1"}},"name":"_id_"},{"v":{"$numberInt":"2"},"key":{"ts":{"$numberInt":"1"}},"name":"ts_1","unique":true}],"uuid":"3021624775554be7bf493c86566a75f9","collectionName":"slack_messages","type":"collection"}
