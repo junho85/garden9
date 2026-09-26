@@ -7,3 +7,7 @@ venv
 # 이전 작업 설정 (mongo·supabase 자격증명)
 archive/migration/migration_config.yaml
 .venv-migrate/
+
+# Python
+__pycache__/
+*.pyc
